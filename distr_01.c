@@ -13,7 +13,7 @@ typedef struct list{
 	node_t* head;
 } list_t;
 
-list_t* create_a_list(int(*comp)(void*, void*))
+list_t* create_list(int(*comp)(void*, void*))
 {
 	list_t* l = (list_t*)malloc(sizeof(list_t));
 	l->compare = comp;
@@ -22,7 +22,7 @@ list_t* create_a_list(int(*comp)(void*, void*))
     return l;
 }
 
-void delete_a_list(list_t* list){
+void delete_list(list_t* list){
     if(list == NULL) { 
         printf("an attempt to delete a not initialized list\n");    
         return;
@@ -33,14 +33,13 @@ void delete_a_list(list_t* list){
         return;
     }
     printf("deleting the list:\n");
-    node_t* temp = list->head->right;
-    while(temp != NULL){
-        printf("deleting element at address: %p\n", list->head);
-        free(list->head);
-        list->head = temp;
-        temp = temp->right;  
+    node_t* temp = NULL;
+    while(list->head != NULL){
+        temp = list->head;
+        list->head = list->head->right;
+        printf("deleting element at address: %p\n", temp);
+        free(temp);
     }
-    free(list->head);
 }
 
 int is_empty(list_t* list){
@@ -62,14 +61,14 @@ int compare_strings( void* s1,  void* s2){
 	return strcmp((const char*)s1, (const char*)s2); 
 }
 
-void update_the_head(list_t* list){
+void update_head(list_t* list){
     while(list->head->left != NULL ){
         list->head = list->head->left; 
     }
     return;
 }
 
-void insert_to_the_list(list_t* list, void* val){
+void insert_to_list(list_t* list, void* val){
     if(list->head == NULL){
         list->head = (node_t*)malloc(sizeof(node_t));
         list->head->data_ptr = val;
@@ -91,7 +90,7 @@ void insert_to_the_list(list_t* list, void* val){
                 temp->left = iter->left;
                 temp->right = iter;
                 iter->left = temp;
-                update_the_head(list);
+                update_head(list);
                 return;
             }
             if(iter->right == NULL){
@@ -105,7 +104,7 @@ void insert_to_the_list(list_t* list, void* val){
     }
 }
 
-void print_the_list(list_t* list){
+void print_list(list_t* list){
     node_t* iter = list->head;
     int i = 0;
     printf("content of the list:\n");
@@ -118,25 +117,25 @@ void print_the_list(list_t* list){
 int main(int argc, const char** argv){
 	list_t* lis = NULL;
     //is_empty(l);
-    lis = create_a_list(compare_strings);
+    lis = create_list(compare_strings);
 
     char* sas = "dsf";
     char* mam = "xdf";
     char* dad = "aaa";
     char* zaz = "aax";
 
-    insert_to_the_list(lis, sas);
-    print_the_list(lis);
-    insert_to_the_list(lis, mam);
-    print_the_list(lis);
-    insert_to_the_list(lis, dad);
-    print_the_list(lis);
-    insert_to_the_list(lis, zaz);
-    print_the_list(lis);
+    insert_to_list(lis, sas);
+    //print_list(lis);
+    insert_to_list(lis, mam);
+    //print_list(lis);
+    insert_to_list(lis, dad);
+    //print_list(lis);
+    insert_to_list(lis, zaz);
+    //print_list(lis);
 
-    //insert_to_the_list(l, "world!\n");
+    //insert_to_list(l, "world!\n");
 
 
-    delete_a_list(lis);
+    delete_list(lis);
     return 0;
 }
