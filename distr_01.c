@@ -10,29 +10,79 @@ typedef struct node{
 
 typedef struct list{
 	int(*compare)(void*, void*);
-	node_t* head;
+    void(*print)(node_t*);
+    node_t* head;
 } list_t;
 
-list_t* create_list(int(*comp)(void*, void*))
+list_t* create_list(int(*comp)(void*, void*), void(*prt)(node_t*))
 {
-	list_t* l = (list_t*)malloc(sizeof(list_t));
-	l->compare = comp;
-	l->head = NULL;
-    printf("a list is created\n");
-    return l;
+	list_t* list = (list_t*)malloc(sizeof(list_t));
+    list->compare = comp;
+    list->print = prt;
+	list->head = NULL;
+    printf("\na list is created\n");
+    return list;
+}
+
+void update_head(list_t* list){
+    while(list->head->left != NULL ){
+        list->head = list->head->left; 
+    }
+}
+
+int compare_strings( void* s1,  void* s2){
+	return strcmp((const char*)s1, (const char*)s2); 
+}
+
+void print_strings(node_t* iter){
+    int i = 0;
+    printf("\ncontent of the list:\n");
+    while(iter != NULL){
+        printf("element %d: %s   | address: %p\n", ++i, (char*)(iter->data_ptr), iter);
+        iter = iter->right;
+    }
+}
+
+void delete_node(list_t* list, void* val){
+    if(list == NULL) { 
+        printf("\nan attempt to delete a node in a not initialized list\n");    
+        return;
+    }
+    if(list->head == NULL) { 
+        printf("\nan attempt to delete a node in an empty list\n");
+        return;
+    }
+
+    node_t* temp = list->head;
+    while(temp != NULL){
+        if(list->compare(temp->data_ptr, val) == 0){
+            if(temp->left != NULL){
+                temp->left->right = temp->right;
+            }
+            if(temp->right != NULL){
+                temp->right->left = temp->left;
+            }
+            printf("\ndeleting element at address: %p\n", temp);
+            free(temp);
+            update_head(list);
+            return;
+        }
+        temp = temp->right;
+    }
+    printf("\nno such element\n");
 }
 
 void delete_list(list_t* list){
     if(list == NULL) { 
-        printf("an attempt to delete a not initialized list\n");    
+        printf("\nan attempt to delete a not initialized list\n");    
         return;
     }
     if(list->head == NULL) { 
-        printf("deleting an empty list\n");
+        printf("\ndeleting an empty list\n");
         free(list);
         return;
     }
-    printf("deleting the list:\n");
+    printf("\ndeleting the list:\n");
     node_t* temp = NULL;
     while(list->head != NULL){
         temp = list->head;
@@ -44,28 +94,17 @@ void delete_list(list_t* list){
 
 int is_empty(list_t* list){
     if(list == NULL || list->compare == NULL){ 
-       printf("list not even initialized\n");
+       printf("\nlist not even initialized\n");
        return -1;
     }
     if(list->head == NULL) { 
-        printf("list initialized, but empty\n");
+        printf("\nlist initialized, but empty\n");
         return 1;
     }
     else{
-        printf("list is not empty\n");
+        printf("\nlist is not empty\n");
         return 0;
     }
-}
-
-int compare_strings( void* s1,  void* s2){
-	return strcmp((const char*)s1, (const char*)s2); 
-}
-
-void update_head(list_t* list){
-    while(list->head->left != NULL ){
-        list->head = list->head->left; 
-    }
-    return;
 }
 
 void insert_to_list(list_t* list, void* val){
@@ -104,38 +143,28 @@ void insert_to_list(list_t* list, void* val){
     }
 }
 
-void print_list(list_t* list){
-    node_t* iter = list->head;
-    int i = 0;
-    printf("content of the list:\n");
-    while(iter != NULL){
-        printf("element %d: %p\n", ++i, iter->data_ptr);
-        iter = iter->right;  
-    }
-}
 
 int main(int argc, const char** argv){
-	list_t* lis = NULL;
-    //is_empty(l);
-    lis = create_list(compare_strings);
+	
+    list_t* list = create_list(compare_strings, print_strings);
 
-    char* sas = "dsf";
-    char* mam = "xdf";
-    char* dad = "aaa";
-    char* zaz = "aax";
+    char* s_1 = "dsf";
+    char* s_2 = "xdf";
+    char* s_3 = "aaa";
+    char* s_4 = "aax";
 
-    insert_to_list(lis, sas);
-    //print_list(lis);
-    insert_to_list(lis, mam);
-    //print_list(lis);
-    insert_to_list(lis, dad);
-    //print_list(lis);
-    insert_to_list(lis, zaz);
-    //print_list(lis);
+    insert_to_list(list, s_1);
+    insert_to_list(list, s_2);
+    insert_to_list(list, s_3);
+    insert_to_list(list, s_4);
+    
+    list->print(list->head);
 
-    //insert_to_list(l, "world!\n");
+    delete_node(list, "dsf");
+    delete_node(list, "zzz");
 
+    list->print(list->head);
 
-    delete_list(lis);
+    delete_list(list);
     return 0;
 }
