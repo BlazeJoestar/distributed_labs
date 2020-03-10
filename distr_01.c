@@ -70,15 +70,22 @@ void delete_node(list_t* list, void* val){
     node_t* temp = list->head;
     while(temp != NULL){
         if(list->compare(temp->data_ptr, val) == 0){
+            if(temp->left == NULL && temp->right == NULL){
+                printf("\ndeleting element at address: %p\nnow list is empty\n", temp);
+                free(temp);
+                list->head = NULL;
+                return;
+            }
             if(temp->left != NULL){
                 temp->left->right = temp->right;
             }
             if(temp->right != NULL){
                 temp->right->left = temp->left;
             }
+            list->head = (temp->left == NULL) ? temp->right : temp->left; 
+            update_head(list);
             printf("\ndeleting element at address: %p\n", temp);
             free(temp);
-            update_head(list);
             return;
         }
         temp = temp->right;
@@ -180,12 +187,27 @@ int main(int argc, const char** argv){
     insert_to_list(list, s_4);
     
     list->print(list->head);
+    
+    char* str = NULL;
+    
+    while(1){
+        printf("\n\ninsert element to list (up to 31 characters), or insert \"zmija69\" to exit:\n");
+        str = (char*)malloc(32);
+        scanf("%s", str);
+        if(strcmp(str, "zmija69") == 0){
+            break;
+        }
+        insert_to_list(list, str);
+        list->print(list->head);
+    }
+    list->print(list->head);
 
     delete_node(list, "dsf");
-    delete_node(list, "zzz");
-
+    delete_node(list, "aaa");
+   
     list->print(list->head);
 
     delete_list(list);
+    free(str);
     return 0;
 }
