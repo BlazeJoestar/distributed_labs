@@ -177,7 +177,7 @@ void insert_to_list(list_t* list, void* val){
 
 int main(int argc, const char** argv){
 	
-    list_t* list = create_list(compare_strings, print_string);
+    list_t* list = create_list(compare_strings, print_strings);
     
     list->print(list->head);
     
