@@ -72,7 +72,8 @@ void delete_node(list_t* list, void* val){
         if(list->compare(temp->data_ptr, val) == 0){
             if(temp->left == NULL && temp->right == NULL){
                 printf("\ndeleting element at address: %p\nnow list is empty\n", temp);
-                free(temp);
+                free(temp->data_ptr);
+		free(temp);
                 list->head = NULL;
                 return;
             }
@@ -85,7 +86,8 @@ void delete_node(list_t* list, void* val){
             list->head = (temp->left == NULL) ? temp->right : temp->left; 
             update_head(list);
             printf("\ndeleting element at address: %p\n", temp);
-            free(temp);
+            free(temp->data_ptr);
+	    free(temp);
             return;
         }
         temp = temp->right;
@@ -110,7 +112,8 @@ void delete_list(list_t* list){
         temp = list->head;
         list->head = list->head->right;
         printf("deleting element at address: %p\n", temp);
-        free(temp);
+        free(temp->data_ptr);
+	free(temp);
     }
 }
 
@@ -174,17 +177,7 @@ void insert_to_list(list_t* list, void* val){
 
 int main(int argc, const char** argv){
 	
-    list_t* list = create_list(compare_strings, print_strings);
-
-    char* s_1 = "dsf";
-    char* s_2 = "xdf";
-    char* s_3 = "aaa";
-    char* s_4 = "aax";
-
-    insert_to_list(list, s_1);
-    insert_to_list(list, s_2);
-    insert_to_list(list, s_3);
-    insert_to_list(list, s_4);
+    list_t* list = create_list(compare_strings, print_string);
     
     list->print(list->head);
     
@@ -204,10 +197,13 @@ int main(int argc, const char** argv){
 
     delete_node(list, "dsf");
     delete_node(list, "aaa");
+    delete_node(list, "xxxxxxxxxxxxx");
    
     list->print(list->head);
 
     delete_list(list);
+    // since the last string had to be "zmija69" to break the loop, it was not assigned
+    // to any node, and as a result it was not deleted - we need to clean it now.
     free(str);
     return 0;
 }
