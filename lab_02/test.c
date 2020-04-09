@@ -1,20 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "uni_functions.h"
+#include "uni_types.h"
 
 int main(){
-    list_t* test = create_list(compare_strings, print_strings);
-    char* temp = (char*)malloc(32);
-    temp = "askdbkbjdakjbd";
-    insert_to_list(test, temp);
-    temp = (char*)malloc(32);
-    temp = "askdbk";
-    insert_to_list(test, temp);
-    temp = (char*)malloc(32);
-    temp = "as";
-    insert_to_list(test, temp);
-
-    test->print(test->head);
-
-    
+	list_t* test = create_list(compare_strings, print_strings);
+	printf(" you will be asked for 3 strings\n"); 
+	char* temp = NULL;
+	for(int i = 0; i < 3; i ++){
+		printf("insert %d. string: ", i+1);
+		temp = (char*)malloc(32);
+		scanf("%s", temp);
+		insert_to_list(test, temp);
+	}	
+	
+	test->print(test->head);
+	delete_list(test);
+	free(test);
+	return 0;    
 }

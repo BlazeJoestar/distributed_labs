@@ -1,11 +1,11 @@
-#include <stdlib.h>
+
 #include "uni_functions.h"
 
 list_t* create_list(int(*comp)(void*, void*), void(*prt)(node_t*)){
 	list_t* list = (list_t*)malloc(sizeof(list_t));
     list->compare = comp;
     list->print = prt;
-	list->head = NULL;
+    list->head = NULL;
     printf("\na list is created\n");
     return list;
 }
