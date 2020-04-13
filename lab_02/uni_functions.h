@@ -1,9 +1,9 @@
+#ifndef _UNI_FUNCTIONS_
+#define _UNI_FUNCTIONS_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifndef _UNI_FUNCTIONS_
-#define _UNI_FUNCTIONS_
 
 #include "uni_types.h"
 

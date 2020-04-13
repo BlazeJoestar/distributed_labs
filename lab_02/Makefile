@@ -22,7 +22,7 @@ lib_uni_f.a: uni_functions.c uni_functions.h uni_types.h
 
 dynamic: test.o lib_uni_functions.so
 	gcc test.o -L. -l_uni_functions -o dynamic
-	export LD_LIBRARY_PATH=:$(cur_dir)
+	export LD_LIBRARY_PATH=$(cur_dir)
 	ldd dynamic
 	# if "lib_uni_functions.so => not found" proceed please copy-paste above command (export...)  manually 
 lib_uni_functions.so: uni_functions.o

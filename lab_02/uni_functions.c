@@ -1,4 +1,3 @@
-
 #include "uni_functions.h"
 
 list_t* create_list(int(*comp)(void*, void*), void(*prt)(node_t*)){
