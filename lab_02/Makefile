@@ -1,6 +1,5 @@
 SHELL := /bin/bash
-current_dir = $(shell pwd)
-
+cur_dir = $(shell pwd)/
 
 mono: monolit
 stat: static
@@ -22,10 +21,12 @@ lib_uni_f.a: uni_functions.c uni_functions.h uni_types.h
 
 
 dynamic: test.o lib_uni_functions.so
-	gcc test.o -L. -l_uni_functions -o dynamic	
-	export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH
+	gcc test.o -L. -l_uni_functions -o dynamic
+	export LD_LIBRARY_PATH=:$(cur_dir)
+	ldd dynamic
+	# if "lib_uni_functions.so => not found" proceed please copy-paste above command (export...)  manually 
 lib_uni_functions.so: uni_functions.o
-	gcc uni_functions.o -shared -o lib_uni_functions.so
+	gcc -Wall uni_functions.o -shared -o lib_uni_functions.so
 uni_functions.o: uni_functions.c uni_functions.h uni_types.h
 	gcc -c -fPIC -Wall -D_GNU_SOURCE uni_functions.c
 
