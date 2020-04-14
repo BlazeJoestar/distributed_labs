@@ -21,6 +21,7 @@ int fork_knife(int counter, int assistance){
 		printf("> current: %d | parent: %d\n", getpid(), getppid());
 		sleep(1);
 		fork_knife(counter, assistance+1);
+		_exit(0);
 	}
 }
 
