@@ -23,6 +23,10 @@ int fork_knife(int counter, int assistance){
 		fork_knife(counter, assistance+1);
 		_exit(0);
 	}
+	else {
+		printf("else: current: %d | parent: %d\n", getpid(), getppid());
+		
+	}
 }
 
 void fork_default(int counter){
