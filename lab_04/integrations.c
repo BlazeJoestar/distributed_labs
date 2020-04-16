@@ -2,15 +2,16 @@
 #include <math.h>
 #include <windows.h>
 #include <conio.h>
+#include <time.h>
 
 #ifndef M_PI
 #    define M_PI 3.14159265358979323846
 #endif
 
-#define STEP 0.001
+#define STEP 0.0000001
 #define TO_RADIAN(a) a * (M_PI/180)  
 
-const double step = 0.0001;
+const double step = 0.0000001;
 double to_radian(double a) { return a * M_PI / 180.0; }
 
 typedef struct pair {
@@ -54,10 +55,10 @@ int main(int ac, char* av[]) {
 		scanf("%lf", &end);
 		printf("please, provide:\n number of threads (1 - 4): ");
 		scanf("%d", &threads);
-		if (threads > 4) {
-			threads = 4;
-		}
-		else if (threads < 1) {
+		//if (threads > 4) {
+		//	threads = 4;
+		//}
+		if (threads < 1) {
 			threads = 1;
 		}
 
@@ -75,6 +76,8 @@ int main(int ac, char* av[]) {
 	viper_threads = (HANDLE*)malloc(sizeof(HANDLE) * threads);
 	DWORD thread_id;
 
+	clock_t time_ = clock();
+
 	for (int i = 0; i < threads; i++) {
 		viper_threads[i] = CreateThread(
 			NULL,
@@ -85,6 +88,7 @@ int main(int ac, char* av[]) {
 			&thread_id
 			);
 	}
+	
 	DWORD synchro = WaitForMultipleObjects(
 		threads,
 		viper_threads,
@@ -94,12 +98,15 @@ int main(int ac, char* av[]) {
 
 	double result = 0.0;
 
+	time_ = clock() - time_;
+	double time_total = ((double)time_)/CLOCKS_PER_SEC; 
+
 	for (int i = 0; i < threads; i++) {
 		result += intervals[i].area;
 	}
 
-	printf("calculated integral of sin() for interval <%lf, %lf> (radians) calculated by %d proces%s\n result: %lf\n",
-		beg, end, threads, (threads == 1) ? " " : "ses", result);
+	printf("calculated integral of sin() for interval <%lf, %lf> (radians) calculated by %d proces%s\n result: %lf\n time taken: %lf\n",
+		beg, end, threads, (threads == 1) ? " " : "ses", result, time_total);
 
 	for (int i = 0; i < threads; i++) {
 		CloseHandle(viper_threads[i]);
